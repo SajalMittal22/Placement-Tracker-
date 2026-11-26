@@ -8,8 +8,8 @@ export function AuthProvider({ children }) {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = (email) => {
-    const userData = { email, name: email.split("@")[0] };
+  const login = (email, role) => {
+    const userData = { email, name: email.split("@")[0], role };
     localStorage.setItem("placement_user", JSON.stringify(userData));
     setUser(userData);
   };
@@ -19,8 +19,10 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const isAdmin = user?.role === "admin";
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, isAdmin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
