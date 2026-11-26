@@ -22,7 +22,7 @@ export default function Navbar() {
       </div>
       <div className="nav-user">
         <span>
-          Hi, {user.name} ({isAdmin ? "Company" : "Student"})
+          Hi, {user.name} ({isAdmin ? user.company : "Student"})
         </span>
         <button className="btn-danger" onClick={handleLogout}>Logout</button>
       </div>

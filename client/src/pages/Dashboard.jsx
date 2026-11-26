@@ -7,7 +7,7 @@ export default function Dashboard() {
   const { user, isAdmin } = useAuth();
 
   const visibleApps = isAdmin
-    ? applications
+    ? applications.filter((a) => a.company === user.company)
     : applications.filter((a) => a.applicantEmail === user.email);
 
   const stats = [
@@ -25,7 +25,7 @@ export default function Dashboard() {
 
   return (
     <div className="container">
-      <h2>{isAdmin ? "Company Dashboard" : "Student Dashboard"}</h2>
+      <h2>{isAdmin ? `${user.company} Dashboard` : "Student Dashboard"}</h2>
 
       <div className="stats-grid">
         {stats.map((s) => (
