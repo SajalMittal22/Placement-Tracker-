@@ -10,7 +10,7 @@ export default function Applications() {
   const [filter, setFilter] = useState("All");
 
   const visibleApps = isAdmin
-    ? applications
+    ? applications.filter((app) => app.company === user.company)
     : applications.filter((app) => app.applicantEmail === user.email);
 
   const filteredApps = visibleApps.filter((app) => {
@@ -24,7 +24,7 @@ export default function Applications() {
 
   return (
     <div className="container">
-      <h2>{isAdmin ? "Incoming Applications" : "My Applications"}</h2>
+      <h2>{isAdmin ? `${user.company} — Incoming Applications` : "My Applications"}</h2>
 
       <div className="toolbar">
         <input

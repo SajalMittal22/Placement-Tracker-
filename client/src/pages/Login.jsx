@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { COMPANIES } from "../data/companies";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [company, setCompany] = useState(COMPANIES[0].name);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) return;
-    login(email, role);
+    login(email, role, role === "admin" ? company : null);
     navigate("/");
   };
 
@@ -38,6 +41,17 @@ export default function Login() {
           <option value="user">Student (Apply & Track)</option>
           <option value="admin">Company / Admin (Review Applications)</option>
         </select>
+
+        {role === "admin" && (
+          <select value={company} onChange={(e) => setCompany(e.target.value)}>
+            {COMPANIES.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        )}
+
         <button type="submit">Sign In</button>
       </form>
     </div>

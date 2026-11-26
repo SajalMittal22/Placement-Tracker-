@@ -8,8 +8,13 @@ export function AuthProvider({ children }) {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = (email, role) => {
-    const userData = { email, name: email.split("@")[0], role };
+  const login = (email, role, company = null) => {
+    const userData = {
+      email,
+      name: email.split("@")[0],
+      role,
+      company: role === "admin" ? company : null,
+    };
     localStorage.setItem("placement_user", JSON.stringify(userData));
     setUser(userData);
   };
