@@ -5,26 +5,31 @@ import StatusBadge from "../components/StatusBadge";
 
 export default function Applications() {
   const { applications, updateStatus, deleteApplication } = usePlacements();
-  const { isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  const filteredApps = applications.filter((app) => {
+  const visibleApps = isAdmin
+    ? applications
+    : applications.filter((app) => app.applicantEmail === user.email);
+
+  const filteredApps = visibleApps.filter((app) => {
     const matchesSearch =
       app.company.toLowerCase().includes(search.toLowerCase()) ||
-      app.role.toLowerCase().includes(search.toLowerCase());
+      app.role.toLowerCase().includes(search.toLowerCase()) ||
+      (app.applicantName || "").toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "All" || app.status === filter;
     return matchesSearch && matchesFilter;
   });
 
   return (
     <div className="container">
-      <h2>Applications</h2>
+      <h2>{isAdmin ? "Incoming Applications" : "My Applications"}</h2>
 
       <div className="toolbar">
         <input
           type="text"
-          placeholder="Search company or role..."
+          placeholder={isAdmin ? "Search student, company, or role..." : "Search company or role..."}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -39,11 +44,12 @@ export default function Applications() {
       </div>
 
       {filteredApps.length === 0 ? (
-        <p>No applications found.</p>
+        <p className="muted">No applications found.</p>
       ) : (
         <table className="app-table">
           <thead>
             <tr>
+              {isAdmin && <th>Applicant</th>}
               <th>Company</th>
               <th>Role</th>
               <th>Deadline</th>
@@ -54,6 +60,7 @@ export default function Applications() {
           <tbody>
             {filteredApps.map((app) => (
               <tr key={app.id}>
+                {isAdmin && <td>{app.applicantName || "Unknown"}</td>}
                 <td><strong>{app.company}</strong></td>
                 <td>{app.role}</td>
                 <td>{app.deadline || "—"}</td>

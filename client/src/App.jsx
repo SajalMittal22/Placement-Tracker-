@@ -7,10 +7,10 @@ import Applications from "./pages/Applications";
 import AddApplication from "./pages/AddApplication";
 import Login from "./pages/Login";
 
-function ProtectedRoute({ children, adminOnly = false }) {
+function ProtectedRoute({ children, studentOnly = false }) {
   const { user, isAdmin } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
-  if (adminOnly && !isAdmin) return <Navigate to="/" replace />;
+  if (studentOnly && isAdmin) return <Navigate to="/" replace />;
   return children;
 }
 
@@ -27,7 +27,7 @@ export default function App() {
             <Route
               path="/add"
               element={
-                <ProtectedRoute adminOnly={true}>
+                <ProtectedRoute studentOnly={true}>
                   <AddApplication />
                 </ProtectedRoute>
               }

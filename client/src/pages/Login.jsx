@@ -35,8 +35,8 @@ export default function Login() {
           required
         />
         <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="user">Normal User (View Only)</option>
-          <option value="admin">Admin (Add & Manage)</option>
+          <option value="user">Student (Apply & Track)</option>
+          <option value="admin">Company / Admin (Review Applications)</option>
         </select>
         <button type="submit">Sign In</button>
       </form>

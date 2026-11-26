@@ -1,25 +1,31 @@
 import { usePlacements } from "../context/PlacementContext";
+import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
 
 export default function Dashboard() {
   const { applications } = usePlacements();
+  const { user, isAdmin } = useAuth();
+
+  const visibleApps = isAdmin
+    ? applications
+    : applications.filter((a) => a.applicantEmail === user.email);
 
   const stats = [
-    { label: "Total Applied", value: applications.length },
-    { label: "Online Assessments", value: applications.filter((a) => a.status === "OA").length },
-    { label: "Interviews", value: applications.filter((a) => a.status === "Interview").length },
-    { label: "Offers", value: applications.filter((a) => a.status === "Offer").length },
+    { label: isAdmin ? "Total Applications" : "My Applications", value: visibleApps.length },
+    { label: "Online Assessments", value: visibleApps.filter((a) => a.status === "OA").length },
+    { label: "Interviews", value: visibleApps.filter((a) => a.status === "Interview").length },
+    { label: "Offers", value: visibleApps.filter((a) => a.status === "Offer").length },
   ];
 
   const today = new Date().toISOString().split("T")[0];
-  const upcoming = applications
+  const upcoming = visibleApps
     .filter((a) => a.deadline && a.deadline >= today && a.status !== "Rejected")
     .sort((a, b) => a.deadline.localeCompare(b.deadline))
     .slice(0, 5);
 
   return (
     <div className="container">
-      <h2>Dashboard</h2>
+      <h2>{isAdmin ? "Company Dashboard" : "Student Dashboard"}</h2>
 
       <div className="stats-grid">
         {stats.map((s) => (
@@ -40,6 +46,7 @@ export default function Dashboard() {
               <div className="deadline-item" key={app.id}>
                 <div>
                   <strong>{app.company}</strong> — {app.role}
+                  {isAdmin && app.applicantName && ` (${app.applicantName})`}
                 </div>
                 <div className="deadline-meta">
                   <span>Due: {app.deadline}</span>

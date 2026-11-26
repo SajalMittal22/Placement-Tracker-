@@ -17,12 +17,12 @@ export default function Navbar() {
       <div className="nav-links">
         <strong>Placement Tracker</strong>
         <Link to="/">Dashboard</Link>
-        <Link to="/applications">Applications</Link>
-        {isAdmin && <Link to="/add">Add Application</Link>}
+        <Link to="/applications">{isAdmin ? "All Applications" : "My Applications"}</Link>
+        {!isAdmin && <Link to="/add">Apply</Link>}
       </div>
       <div className="nav-user">
         <span>
-          Hi, {user.name} ({isAdmin ? "Admin" : "User"})
+          Hi, {user.name} ({isAdmin ? "Company" : "Student"})
         </span>
         <button className="btn-danger" onClick={handleLogout}>Logout</button>
       </div>
