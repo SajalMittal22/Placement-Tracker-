@@ -7,9 +7,11 @@ import Applications from "./pages/Applications";
 import AddApplication from "./pages/AddApplication";
 import Login from "./pages/Login";
 
-function ProtectedRoute({ children }) {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/login" replace />;
+function ProtectedRoute({ children, adminOnly = false }) {
+  const { user, isAdmin } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (adminOnly && !isAdmin) return <Navigate to="/" replace />;
+  return children;
 }
 
 export default function App() {
@@ -22,7 +24,14 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/applications" element={<ProtectedRoute><Applications /></ProtectedRoute>} />
-            <Route path="/add" element={<ProtectedRoute><AddApplication /></ProtectedRoute>} />
+            <Route
+              path="/add"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AddApplication />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </PlacementProvider>

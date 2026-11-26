@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { usePlacements } from "../context/PlacementContext";
+import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
 
 export default function Applications() {
   const { applications, updateStatus, deleteApplication } = usePlacements();
+  const { isAdmin } = useAuth();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
@@ -46,7 +48,7 @@ export default function Applications() {
               <th>Role</th>
               <th>Deadline</th>
               <th>Status</th>
-              <th>Action</th>
+              {isAdmin && <th>Action</th>}
             </tr>
           </thead>
           <tbody>
@@ -56,24 +58,28 @@ export default function Applications() {
                 <td>{app.role}</td>
                 <td>{app.deadline || "—"}</td>
                 <td>
-                  <StatusBadge status={app.status} />{" "}
-                  <select
-                    value={app.status}
-                    onChange={(e) => updateStatus(app.id, e.target.value)}
-                    style={{ marginLeft: "8px" }}
-                  >
-                    <option value="Applied">Applied</option>
-                    <option value="OA">OA</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Offer">Offer</option>
-                    <option value="Rejected">Rejected</option>
-                  </select>
+                  <StatusBadge status={app.status} />
+                  {isAdmin && (
+                    <select
+                      value={app.status}
+                      onChange={(e) => updateStatus(app.id, e.target.value)}
+                      style={{ marginLeft: "8px" }}
+                    >
+                      <option value="Applied">Applied</option>
+                      <option value="OA">OA</option>
+                      <option value="Interview">Interview</option>
+                      <option value="Offer">Offer</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  )}
                 </td>
-                <td>
-                  <button className="btn-danger" onClick={() => deleteApplication(app.id)}>
-                    Delete
-                  </button>
-                </td>
+                {isAdmin && (
+                  <td>
+                    <button className="btn-danger" onClick={() => deleteApplication(app.id)}>
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

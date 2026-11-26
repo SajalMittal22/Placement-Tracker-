@@ -5,13 +5,14 @@ import { useAuth } from "../context/AuthContext";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) return;
-    login(email);
+    login(email, role);
     navigate("/");
   };
 
@@ -21,7 +22,7 @@ export default function Login() {
         <h2>Placement Tracker Login</h2>
         <input
           type="email"
-          placeholder="College Email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -33,6 +34,10 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="user">Normal User (View Only)</option>
+          <option value="admin">Admin (Add & Manage)</option>
+        </select>
         <button type="submit">Sign In</button>
       </form>
     </div>
