@@ -2,7 +2,7 @@
 
 A role-based campus placement portal built with **React** and **Vite**. Students can browse and apply to open roles from listed companies, while company admins can review incoming applications for their organization and update candidate statuses.
 
-## Render Link -> https://placement-tracker-s1d4.onrender.com/login
+## Render Link -> https://placement-tracker-s1d4.onrender.com
 
 ## Features
 
